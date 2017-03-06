@@ -1,0 +1,39 @@
+{
+  "name": "bookmark",
+  "base": "PersistedModel",
+  "idInjection": true,
+  "options": {
+    "validateUpsert": true
+  },
+  "properties": {
+    "name": {
+      "type": "string",
+      "required": true
+    },
+    "content":{
+      "type": "string",
+      "required": true
+    },
+    "id": {
+      "type": "number",
+      "required": true
+    },
+    "userId": {
+      "type": "number",
+      "required": true
+    },
+    "createTime":{
+      "type":"date",
+      "defaultFn":"now"
+    },
+    "type":{
+      "type":"string",
+      "required":true,
+      "default":"public"
+    }
+  },
+  "validations": [],
+  "relations": {},
+  "acls": [],
+  "methods": {}
+}
