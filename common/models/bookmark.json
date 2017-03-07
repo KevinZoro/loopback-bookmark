@@ -1,39 +1,42 @@
 {
-  "name": "bookmark",
-  "base": "PersistedModel",
-  "idInjection": true,
-  "options": {
-    "validateUpsert": true
-  },
-  "properties": {
-    "id": {
-      "type": "number",
-      "required": true
-    },
-    "name": {
-      "type": "string",
-      "required": true
-    },
-    "content": {
-      "type": "string",
-      "required": true
-    },
-    "userId": {
-      "type": "number",
-      "required": true
-    },
-    "createTime": {
-      "type": "date",
-      "defaultFn": "now"
-    },
-    "type": {
-      "type": "string",
-      "required": true,
-      "default": "public"
-    }
-  },
-  "validations": [],
-  "relations": {},
-  "acls": [],
-  "methods": {}
+	"name": "bookmark",
+	"base": "PersistedModel",
+	"idInjection": true,
+	"options": {
+		"validateUpsert": true
+	},
+	"properties": {
+		"id": {
+			"type": "number",
+			"required": true
+		},
+		"name": {
+			"type": "string",
+			"required": true
+		},
+		"content": {
+			"type": "string",
+			"required": true
+		},
+		"userId": {
+			"type": "number",
+			"required": true
+		},
+		"createTime": {
+			"type": "date",
+			"defaultFn": "now"
+		},
+		"type": {
+			"type": "string",
+			"required": true,
+			"default": "public"
+		},
+		"notes": {
+			"type": "string"
+		}
+	},
+	"validations": [],
+	"relations": {},
+	"acls": [],
+	"methods": {}
 }
