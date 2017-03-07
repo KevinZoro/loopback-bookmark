@@ -81,4 +81,29 @@ module.exports = function (Bookmark) {
             }
         }
     )
+
+    Bookmark.observe('before delete',(ctx,next)=>{
+        let deleteId= ctx.where.id;
+        let userId=ctx.options.accessToken && ctx.options.accessToken.userId;
+        Bookmark.findById(deleteId,{
+            fields:{
+                userId:true
+            }
+        },(err,instance)=>{
+            if(instance){
+                if(instance.userId!==userId){
+                    let error = new Error('No access to do that');
+                    error.status=403;
+                    next(error);
+                }else{
+                    next();
+                }
+            }else if(err){
+                next(err);
+            }else{
+                next();
+            }
+        })
+        
+    })
 };
