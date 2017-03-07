@@ -1,34 +1,84 @@
 'use strict';
 
-module.exports = function(Bookmark) {
-    Bookmark.status = (cb)=>{
-        let currentDate = new Date();
-        let currentHour = currentDate.getHours();
-        let OPEN_HOUR = 6;
-        let CLOSE_HOUR = 20;
-        console.log('Current hour is %d', currentHour);
-        let response;
-        if (currentHour > OPEN_HOUR && currentHour < CLOSE_HOUR) {
-            response = 'We are open for business.';
-        } else {
-            response = 'Sorry, we are closed. Open daily from 6am to 8pm.';
+module.exports = function (Bookmark) {
+    Bookmark.list = (accessToken, limit, skip,cb) => {
+        if ((!(accessToken && accessToken.userId))) {
+            cb(new Error('need login in'));
         }
-        cb(null, response);
+        let userId = accessToken.userId;
+        let app = Bookmark.app;
+        Bookmark.find({
+            "where": {
+                'or': [{
+                    'type': 'public'
+                }, {
+                    'userId': userId
+                }],
+            },
+            order:"createTime desc,id desc",
+            limit:limit,
+            skip:skip
+        }, cb)
     }
+
     Bookmark.remoteMethod(
-        'status', {
+        'list', {
             http: {
-                path: '/status',
+                path: '/list',
                 verb: 'get'
             },
+            accepts: [
+                {
+                    arg: 'accessToken',
+                    type: 'object',
+                    http: function (ctx) {
+                        return ctx.req.accessToken;
+                    }
+                },
+                { 'arg': 'limit', type: 'string' },
+                { 'arg': 'skip', type: 'string'}
+            ],
             returns: {
-                arg: 'status',
-                type: 'string'
+                arg: 'list',
+                type: 'array'
             }
         }
-    );
+    )
 
-    Bookmark.list = (cb)=>{
-        
+    Bookmark.listCount = (accessToken, cb) => {
+        if ((!(accessToken && accessToken.userId))) {
+            cb(new Error('need login in'));
+        }
+        let userId = accessToken.userId;
+        let app = Bookmark.app;
+        Bookmark.count({
+            'or': [{
+                'type': 'public'
+            }, {
+                'userId': userId
+            }],
+        }, cb)
     }
+
+    Bookmark.remoteMethod(
+        'listCount', {
+            http: {
+                path: '/list/count',
+                verb: 'get'
+            },
+            accepts: [
+                {
+                    arg: 'accessToken',
+                    type: 'object',
+                    http: function (ctx) {
+                        return ctx.req.accessToken;
+                    }
+                }
+            ],
+            returns: {
+                arg: 'count',
+                type: 'number'
+            }
+        }
+    )
 };
