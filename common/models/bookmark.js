@@ -96,7 +96,8 @@ module.exports = function (Bookmark) {
             fields: {
                 userId: true
             }
-        }, (err, instance) => {
+        }).then(instance => {
+            // console.log(instance);
             if (instance) {
                 if (instance.userId !== userId) {
                     let error = new Error('No access to do that');
@@ -110,6 +111,8 @@ module.exports = function (Bookmark) {
             } else {
                 next();
             }
+        }).catch(err=>{
+            next(err);
         })
 
     })

@@ -43,6 +43,7 @@
 			"foreignKey": "userId"
 		}
 	},
+	"replaceOnPUT":false,
 	"acls": [],
 	"methods": {}
 }
