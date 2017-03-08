@@ -36,7 +36,13 @@
 		}
 	},
 	"validations": [],
-	"relations": {},
+	"relations": {
+		"bookmarkUser": {
+			"type": "belongsTo",
+			"model": "cmsUser",
+			"foreignKey": "userId"
+		}
+	},
 	"acls": [],
 	"methods": {}
 }

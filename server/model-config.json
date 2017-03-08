@@ -15,7 +15,7 @@
   },
   "User": {
     "dataSource": "mysqlDs",
-    "public": true
+    "public": false
   },
   "AccessToken": {
     "dataSource": "mysqlDs",
@@ -42,6 +42,10 @@
   },
   "container": {
     "dataSource": "storage",
+    "public": true
+  },
+  "cmsUser": {
+    "dataSource": "mysqlDs",
     "public": true
   }
 }

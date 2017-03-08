@@ -18,5 +18,9 @@
     "connector": "loopback-component-storage",
     "provider": "filesystem",
     "root": "./server/storage"
+  },
+  "transient": {
+    "name": "transient",
+    "connector": "transient"
   }
 }

@@ -1,0 +1,19 @@
+{
+	"name": "cmsUser",
+	"base": "User",
+	"idInjection": true,
+	"options": {
+		"validateUpsert": true
+	},
+	"properties": {},
+	"validations": [],
+	"relations": {
+		"bookmark": {
+			"type": "hasMany",
+			"model": "bookmark",
+			"foreignKey": "id"
+		}
+	},
+	"acls": [],
+	"methods": {}
+}

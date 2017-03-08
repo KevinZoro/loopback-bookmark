@@ -1,24 +1,27 @@
 'use strict';
+const Promise = require('bluebird');
+const _ =require('lodash');
 
 module.exports = function (Bookmark) {
-    Bookmark.list = (accessToken, limit, skip,cb) => {
+    Bookmark.list = (include,accessToken, limit, skip) => {
         if ((!(accessToken && accessToken.userId))) {
-            cb(new Error('need login in'));
+            return (new Error('need login in'));
         }
         let userId = accessToken.userId;
-        let app = Bookmark.app;
-        Bookmark.find({
-            "where": {
-                'or': [{
-                    'type': 'public'
+
+        return Bookmark.find({
+            include:"bookmarkUser",
+            where: {
+                or: [{
+                    type: 'public'
                 }, {
-                    'userId': userId
+                    userId
                 }],
             },
-            order:"createTime desc,id desc",
-            limit:limit,
-            skip:skip
-        }, cb)
+            order: "createTime desc,id desc",
+            limit: limit,
+            skip: skip
+        });
     }
 
     Bookmark.remoteMethod(
@@ -29,6 +32,10 @@ module.exports = function (Bookmark) {
             },
             accepts: [
                 {
+                    arg: 'include',
+                    type:'string'
+                },
+                {
                     arg: 'accessToken',
                     type: 'object',
                     http: function (ctx) {
@@ -36,7 +43,7 @@ module.exports = function (Bookmark) {
                     }
                 },
                 { 'arg': 'limit', type: 'string' },
-                { 'arg': 'skip', type: 'string'}
+                { 'arg': 'skip', type: 'string' }
             ],
             returns: {
                 arg: 'list',
@@ -45,19 +52,19 @@ module.exports = function (Bookmark) {
         }
     )
 
-    Bookmark.listCount = (accessToken, cb) => {
+    Bookmark.listCount = (accessToken) => {
         if ((!(accessToken && accessToken.userId))) {
-            cb(new Error('need login in'));
+            return (new Error('need login in'));
         }
         let userId = accessToken.userId;
         let app = Bookmark.app;
-        Bookmark.count({
+        return Bookmark.count({
             'or': [{
                 'type': 'public'
             }, {
                 'userId': userId
             }],
-        }, cb)
+        })
     }
 
     Bookmark.remoteMethod(
@@ -82,28 +89,28 @@ module.exports = function (Bookmark) {
         }
     )
 
-    Bookmark.observe('before delete',(ctx,next)=>{
-        let deleteId= ctx.where.id;
-        let userId=ctx.options.accessToken && ctx.options.accessToken.userId;
-        Bookmark.findById(deleteId,{
-            fields:{
-                userId:true
+    Bookmark.observe('before delete', (ctx, next) => {
+        let deleteId = ctx.where.id;
+        let userId = ctx.options.accessToken && ctx.options.accessToken.userId;
+        Bookmark.findById(deleteId, {
+            fields: {
+                userId: true
             }
-        },(err,instance)=>{
-            if(instance){
-                if(instance.userId!==userId){
+        }, (err, instance) => {
+            if (instance) {
+                if (instance.userId !== userId) {
                     let error = new Error('No access to do that');
-                    error.status=403;
+                    error.status = 403;
                     next(error);
-                }else{
+                } else {
                     next();
                 }
-            }else if(err){
+            } else if (err) {
                 next(err);
-            }else{
+            } else {
                 next();
             }
         })
-        
+
     })
 };
